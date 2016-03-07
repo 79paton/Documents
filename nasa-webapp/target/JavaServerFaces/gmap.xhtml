@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+        <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+<head>
+    <title> Test Page 444 </title>
+
+    <script src="http://maps.googleapis.com/maps/api/js?sensor=false" type="text/javascript"></script>
+    <!--<script src="http://api.open-notify.org/iss-now.json" type="text/javascript"></script>-->
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.7.2.min.js"></script>
+
+    <h:outputScript library="primefaces" name="primefaces.js" />
+
+    <link rel="stylesheet" href="resources/css/stylesheet.css" type="text/css" />
+
+    <script type="text/javascript">
+
+        var markersArray = [];
+        var map;
+
+            function initialize() {
+
+                var myCenter = new google.maps.LatLng(56.4640, 2.9700);
+                var myType = google.maps.MapTypeId.TERRAIN;
+                var myZoom = 3;
+
+                var mapProp = {
+                    center: myCenter,
+                    zoom: myZoom,
+                    mapTypeId: myType
+                };
+                map = new google.maps.Map(document.getElementById("gmap1:googleMap"), mapProp);
+                addMarker();
+                displayCords();
+            }
+
+        function displayCords() {
+            $.getJSON('http://api.open-notify.org/iss-now.json?callback=?', function (data) {
+                var lat = data['iss_position']['latitude'];
+                var lon = data['iss_position']['longitude'];
+
+                document.write("Lat" + lat + "Lon" + lon);
+            });
+        }
+
+            function addMarker() {
+                <!-- getJSON JQuery -->
+                $.getJSON('http://api.open-notify.org/iss-now.json?callback=?', function (data) {
+                    var lat = data['iss_position']['latitude'];
+                    var lon = data['iss_position']['longitude'];
+                    var time = data['message'];
+
+                    var myArray = [
+                        {
+//                      "message": "success",
+//                      "timestamp": UNIX_TIME_STAMP,
+                            "iss_position": {
+                                "latitude": lat,
+                                "longitude": lon
+                            }
+                        }
+                    ];
+
+                    marker = new google.maps.Marker({
+                        position: new google.maps.LatLng(myArray[0].iss_position.latitude, myArray[0].iss_position.longitude),
+                        map: map,
+                        icon: 'resources/images/iss3.png'
+                    });
+                    $('poll').timeout(initialize);
+                    markersArray.push(marker);
+                });
+            }
+
+            function loadScript() {
+                var script = document.createElement("script");
+                script.type = "text/javascript";
+                script.src = "http://maps.googleapis.com/maps/api/js?sensor=false&amp;callback=initialize";
+                document.body.appendChild(script);
+            }
+
+            window.onload = loadScript;
+
+    </script>
+</head>
+
+<h:body onload="initialize()">
+<h:outputScript library="primefaces" name="jquery/jquery.js" />
+
+<h:form id="gmap1">
+    <p:gmap id="googleMap" center="56.4640, 2.9700" zoom="3" type="TERRAIN" style="width:100%;height:400px" />
+    <p:poll id="poll" interval="10" update="googleMap" oncomplete="initialize()"  />
+</h:form>
+
+</h:body>
+</html>
