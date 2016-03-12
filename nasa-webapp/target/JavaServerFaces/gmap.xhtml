@@ -3,7 +3,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:p="http://primefaces.org/ui">
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pe="http://primefaces.org/ui/extensions">
 <head>
     <title> Test Page 444 </title>
 
@@ -19,8 +20,22 @@
 
         var markersArray = [];
         var map;
+        var myArray;
 
-            function initialize() {
+        circle = {
+            radius: 50,
+            backgroundColor: "#FF0000",
+            borderColor: "#DDDDDD",
+            scaleFactor: 1.2
+        };
+        circle2 = {
+            radius: 32,
+            backgroundColor: "#FF0320",
+            borderColor: "#DDFFFD",
+            scaleFactor: 1.6
+        };
+
+        function initialize() {
 
                 var myCenter = new google.maps.LatLng(56.4640, 2.9700);
                 var myType = google.maps.MapTypeId.TERRAIN;
@@ -33,7 +48,6 @@
                 };
                 map = new google.maps.Map(document.getElementById("gmap1:googleMap"), mapProp);
                 addMarker();
-                displayCords();
             }
 
         function displayCords() {
@@ -50,21 +64,19 @@
                 $.getJSON('http://api.open-notify.org/iss-now.json?callback=?', function (data) {
                     var lat = data['iss_position']['latitude'];
                     var lon = data['iss_position']['longitude'];
-                    var time = data['message'];
+//                    var time = data['message'];
 
-                    var myArray = [
+                    myArray = ([
                         {
-//                      "message": "success",
-//                      "timestamp": UNIX_TIME_STAMP,
-                            "iss_position": {
                                 "latitude": lat,
                                 "longitude": lon
                             }
-                        }
-                    ];
+
+                ]);
+
 
                     marker = new google.maps.Marker({
-                        position: new google.maps.LatLng(myArray[0].iss_position.latitude, myArray[0].iss_position.longitude),
+                        position: new google.maps.LatLng(lat, lon),
                         map: map,
                         icon: 'resources/images/iss3.png'
                     });
@@ -91,6 +103,35 @@
 <h:form id="gmap1">
     <p:gmap id="googleMap" center="56.4640, 2.9700" zoom="3" type="TERRAIN" style="width:100%;height:400px" />
     <p:poll id="poll" interval="10" update="googleMap" oncomplete="initialize()"  />
+
+    <p:growl id="growl" showDetail="true" />
+
+    <pe:remoteCommand id="applyDataCommand" name="applyData" process="@this" update="subject date circle growl"
+                      actionListener="#{remoteCommandController.parametersAssigned}">
+
+        <pe:assignableParam name="subject" assignTo="#{remoteCommandController.subject}"/>
+        <pe:assignableParam name="date" assignTo="#{remoteCommandController.date}">
+            <f:convertDateTime type="both" dateStyle="short" locale="en"/>
+        </pe:assignableParam>
+        <pe:assignableParam name="circle" assignTo="#{remoteCommandController.coords}">
+            <pe:convertJson />
+        </pe:assignableParam>
+    </pe:remoteCommand>
+
+    <h:outputLabel for="subject" value="Subject: " />
+    <h:outputText id="subject" value="#{remoteCommandController.subject}" />
+    <br/>
+    <h:outputLabel for="date" value="Date: " />
+    <h:outputText id="date" value="#{remoteCommandController.date}" />
+    <br/>
+    <h:outputLabel for="circle" value="Circle: " />
+    <h:outputText id="circle" value=" Latitude: #{remoteCommandController.coords.latitude} - Longitude: #{remoteCommandController.coords.longitude}" />
+    <br/><br/>
+
+    <p:poll id="poll2" interval="10" update="applyDataCommand" oncomplete="applyData('hello world', '5/14/07 12:55:42 PM', JSON.stringify(myArray[0]))" />
+    <p:commandButton value="Apply Second Data" type="button" onclick="applyData('hello user', '7/11/01 11:55:42 PM', JSON.stringify(circle2))" />
+
+
 </h:form>
 
 </h:body>
