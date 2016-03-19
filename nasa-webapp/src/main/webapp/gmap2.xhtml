@@ -3,100 +3,70 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:p="http://primefaces.org/ui">
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pe="http://primefaces.org/ui/extensions">>
 
-<head>
+<h:head>
     <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js"></script>
     <script type="text/javascript" src="http://code.jquery.com/jquery-1.7.2.min.js"></script>
+    <h:outputScript library="primefaces" name="primefaces.js" />
+</h:head>
 
+<h:body onload="datefunction()">
+
+<div id="demo" ></div>
+
+<h:form>
+    <p:growl id="growl" showDetail="true" />
+
+            <pe:remoteCommand id="applyDataCommand" name="applyData" process="@this" update="subject date circle growl"
+    actionListener="#{remoteCommandController.parametersAssigned}">
+
+            <pe:assignableParam name="subject" assignTo="#{remoteCommandController.subject}"/>
+            <pe:assignableParam name="date" assignTo="#{remoteCommandController.date}">
+            <f:convertDateTime type="both" dateStyle="short" locale="en"/>
+            </pe:assignableParam>
+    <pe:assignableParam name="circle" assignTo="#{remoteCommandController.circle}">
+            <pe:convertJson />
+    </pe:assignableParam>
+    </pe:remoteCommand>
+</h:form>
     <script type="text/javascript">
 
-//        var myArray = [
-//            {
-//                "message": "success",
-//                "timestamp": UNIX_TIME_STAMP,
-//                "iss_position": {
-//                    "latitude": CURRENT_LATITUDE,
-//                    "longitude": CURRENT_LONGITUDE
-//                }
-//            }
-//        ];
-//
-//        document.getElementById("placeholder").innerHTML l = data.users[0].joined;
-//        moveISS(myArray);
-//
-//
-//        function moveISS () {
-//            $.getJSON('http://api.open-notify.org/iss-now.json?callback=?', function(data) {
-//                var lat = data['iss_position']['latitude'];
-//                var lon = data['iss_position']['longitude'];
-//            });
-//                // See leaflet docs for setting up icons and map layers
-//                // The update to the map is done here:
-//            var message = "";
-//            $.each(data, function(message) {
-//                message += message.message;
-//            });
-//            document.getElementById("placeholder").innerHTM data.users[0].joined;
-////            setTimeout(moveISS, 5000);
-//        }
+        $.getJSON('http://api.open-notify.org/astros.json?callback=?', function(data) {
+            var number = data['number'];
+            var message = data['message'];
+            var craft = data['people'][0]['craft'];
+            var name = data['people'][0]['name'];
 
-
-    </script>
-</head>
-
-<body>
-
-<div id="googleMap" ></div>
-
-<script type="text/javascript">
-
-//    UNIX_TIME_STAMP = "23.23";
-//    CURRENT_LATITUDE = "2222";
-//    CURRENT_LONGITUDE = "3333";
-
-//function moveISS () {
-//    $.getJSON('http://api.open-notify.org/iss-now.json?callback=?', function(data) {
-//        var lat = data['iss_position']['latitude'];
-//        var lon = data['iss_position']['longitude'];
-//
-//        // See leaflet docs for setting up icons and map layers
-//        // The update to the map is done here:
-//        iss.setLatLng([lat, lon]);
-//        isscirc.setLatLng([lat, lon]);
-//        map.panTo([lat, lon], animate=true);
-//    });
-//    setTimeout(moveISS, 5000);
-//}
-
-$.getJSON('http://api.open-notify.org/iss-now.json?callback=?', function(data) {
-//    var output = "";
-    var lat = data['iss_position']['latitude' ];
-    var lon = data['iss_position']['longitude'];
-
-//    $.each(data, function(index, node) {
-//        lat += node.latitude + ": ";
-//        lon += node.longitude + ": ";
-//    });
-    document.write( " Latitude: " +  lat + " Longitude: " + lon);
-
-//    document.getElementById("googleMap").innerHTML =
-//            myArray[0].iss_position.longitude + "  " + myArray[0].iss_position.latitude;
-});
-
-//var myArray = [
-//    {
-////        "message": "success",
-////        "timestamp": UNIX_TIME_STAMP,
-//        "iss_position": {
-//            "latitude": CURRENT_LATITUDE,
-//            "longitude": CURRENT_LONGITUDE
-//        }
-//    }
-//];
-
+            var names = ([
+                {
+                    "message": message,
+                    "number": number,
+                    "people": [
+                        {
+                            "craft": craft,
+                            "name": name
+                        }
+                    ]
+                }
+            ]);
+        });
 </script>
 
-</body>
+<h:outputLabel for="subject" value="Subject: " />
+<h:outputText id="subject" value="#{remoteCommandController.subject}" />
+<br/>
+<h:outputLabel for="date" value="Date: " />
+<h:outputText id="date" value="#{remoteCommandController.date}" />
+<br/>
+<h:outputLabel for="circle" value="Circle: " />
+<h:outputText id="circle" value="#{remoteCommandController.circle.name}" />
+<br/><br/>
+
+<p:commandButton value="Apply Data" type="button" onclick="applyData('hello world', '5/14/07 12:55:42 PM', JSON.stringify(circle))" />
+<p:commandButton value="Apply Second Data" type="button" onclick="applyData('hello user', '7/11/01 11:55:42 PM', JSON.stringify(names[0]))" />
+
+</h:body>
 
 </html>

@@ -1,6 +1,5 @@
 package com.mkyoung.common;
 
-import com.mkyoung.common.Circle;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
@@ -50,11 +49,12 @@ public class RemoteCommandController {
         this.coords = coords;
     }
 
-//    public Circle getCircle() {
-//        return circle;
-//    }
-//
-//    public void setCircle(final Circle circle) {
-//        this.circle = circle;
-//    }
+    public Circle getCircle() {
+        return circle;
+    }
+
+    public void setCircle(Circle circle) {
+        this.circle = circle;
+    }
+
 }

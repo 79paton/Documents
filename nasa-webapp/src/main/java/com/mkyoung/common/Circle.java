@@ -1,6 +1,10 @@
 package com.mkyoung.common;
 
+import sun.util.calendar.BaseCalendar;
+
 import java.io.Serializable;
+import java.sql.Timestamp;
+import java.util.Date;
 
 /**
  * Created by 79Paton on 12/03/2016.
@@ -15,6 +19,35 @@ public class Circle implements Serializable {
     private String backgroundColor;
     private String borderColor;
     private double scaleFactor;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    private String name;
+
+    public Timestamp getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(Timestamp timestamp) {
+        this.timestamp = timestamp;
+    }
+
+    private Timestamp timestamp;
+
+
+//    public Date getDate() {
+//        return date;
+//    }
+//
+//    public void setDate(Date date) {
+//        this.date = date;
+//    }
 
     public final int getRadius() {
         return radius;

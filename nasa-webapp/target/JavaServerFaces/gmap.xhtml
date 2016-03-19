@@ -22,19 +22,6 @@
         var map;
         var myArray;
 
-        circle = {
-            radius: 50,
-            backgroundColor: "#FF0000",
-            borderColor: "#DDDDDD",
-            scaleFactor: 1.2
-        };
-        circle2 = {
-            radius: 32,
-            backgroundColor: "#FF0320",
-            borderColor: "#DDFFFD",
-            scaleFactor: 1.6
-        };
-
         function initialize() {
 
                 var myCenter = new google.maps.LatLng(56.4640, 2.9700);
@@ -50,33 +37,29 @@
                 addMarker();
             }
 
-        function displayCords() {
-            $.getJSON('http://api.open-notify.org/iss-now.json?callback=?', function (data) {
-                var lat = data['iss_position']['latitude'];
-                var lon = data['iss_position']['longitude'];
-
-                document.write("Lat" + lat + "Lon" + lon);
-            });
-        }
 
             function addMarker() {
                 <!-- getJSON JQuery -->
                 $.getJSON('http://api.open-notify.org/iss-now.json?callback=?', function (data) {
                     var lat = data['iss_position']['latitude'];
                     var lon = data['iss_position']['longitude'];
-//                    var time = data['message'];
+                    var date = data['timestamp'];
 
-                    myArray = ([
+                    myArray =
                         {
+//                            "message": "success",
+//                            "timestamp": UNIX_TIME_STAMP,
+                            "iss_position": ([
+                            {
                                 "latitude": lat,
                                 "longitude": lon
                             }
-
-                ]);
+                            ])
+                        };
 
 
                     marker = new google.maps.Marker({
-                        position: new google.maps.LatLng(lat, lon),
+                        position: new google.maps.LatLng(myArray.iss_position[0].latitude, myArray.iss_position[0].longitude),
                         map: map,
                         icon: 'resources/images/iss3.png'
                     });
@@ -106,14 +89,17 @@
 
     <p:growl id="growl" showDetail="true" />
 
-    <pe:remoteCommand id="applyDataCommand" name="applyData" process="@this" update="subject date circle growl"
+    <pe:remoteCommand id="applyDataCommand" name="applyData" process="@this" update="subject date circle coords growl"
                       actionListener="#{remoteCommandController.parametersAssigned}">
 
         <pe:assignableParam name="subject" assignTo="#{remoteCommandController.subject}"/>
         <pe:assignableParam name="date" assignTo="#{remoteCommandController.date}">
             <f:convertDateTime type="both" dateStyle="short" locale="en"/>
         </pe:assignableParam>
-        <pe:assignableParam name="circle" assignTo="#{remoteCommandController.coords}">
+        <pe:assignableParam name="coords" assignTo="#{remoteCommandController.coords}">
+            <pe:convertJson />
+        </pe:assignableParam>
+        <pe:assignableParam name="circle" assignTo="#{remoteCommandController.circle}">
             <pe:convertJson />
         </pe:assignableParam>
     </pe:remoteCommand>
@@ -124,11 +110,14 @@
     <h:outputLabel for="date" value="Date: " />
     <h:outputText id="date" value="#{remoteCommandController.date}" />
     <br/>
-    <h:outputLabel for="circle" value="Circle: " />
-    <h:outputText id="circle" value=" Latitude: #{remoteCommandController.coords.latitude} - Longitude: #{remoteCommandController.coords.longitude}" />
+    <h:outputLabel for="circle" value="Date: " />
+    <h:outputText id="circle" value="#{remoteCommandController.circle.backgroundColor}" />
+    <br/>
+    <h:outputLabel for="coords" value="Circle: " />
+    <h:outputText id="coords" value=" Latitude: #{remoteCommandController.coords.latitude} - Longitude: #{remoteCommandController.coords.longitude}" />
     <br/><br/>
 
-    <p:poll id="poll2" interval="10" update="applyDataCommand" oncomplete="applyData('hello world', '5/14/07 12:55:42 PM', JSON.stringify(myArray[0]))" />
+    <p:poll id="poll2" interval="10" update="applyDataCommand" oncomplete="applyData('hello world', '5/14/07 12:55:42 PM', JSON.stringify(myArray.iss_position[0]))" />
     <p:commandButton value="Apply Second Data" type="button" onclick="applyData('hello user', '7/11/01 11:55:42 PM', JSON.stringify(circle2))" />
 
 

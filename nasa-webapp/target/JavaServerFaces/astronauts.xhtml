@@ -17,29 +17,32 @@
 
 <script type="text/javascript">
 
+
+
     $.getJSON('http://api.open-notify.org/astros.json?callback=?', function(data) {
+
         var number = data['number'];
-        $('#spacepeeps').html(number);
+        var message = data['message'];
+        var craft = data['people'][0]['craft'];
+        var name = data['people'].forEach(function (d) {
+                  var namess = (' ' + d['name'].append[0] + ' ' );
 
-        data['people'].forEach(function (d) {
-            $('#astronames').append('' + d['name'] + '');
-
-//            myNames = {
-//                "message": "success",
-//                "number": NUMBER_OF_PEOPLE_IN_SPACE,
-//                "people": [
-//                    {
-//                        "name": NAME, "craft": SPACECRAFT_NAME}
-//
-//                ]
-//            };
-
-            document.write( " Name: " +  number);
+            var names =
+            {
+                "message": message,
+                "number": number,
+                "people": [
+                    {
+                        "craft": craft,
+                        "name": namess
+                    }
+                ]
+            };
+//            document.write( " Number of People On Board: " +  number + "Astronauts Names: " + name);
+            document.getElementById("googleMap").innerHTML = names.number + " " + names.people[0].craft + " " +
+                    names.people[0].name + " " + names.message;
         });
     });
-
-
-
 //    document.getElementById("googleMap").innerHTML =
 //            myArray[0].iss_position.longitude + "  " + myArray[0].iss_position.latitude;
 
