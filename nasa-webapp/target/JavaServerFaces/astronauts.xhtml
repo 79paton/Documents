@@ -5,50 +5,49 @@
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:p="http://primefaces.org/ui">
 
-<head>
+<h:head>
     <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js"></script>
     <script type="text/javascript" src="http://code.jquery.com/jquery-1.7.2.min.js"></script>
 
-</head>
+</h:head>
 
-<body>
+<h:body onload="astro()">
 
 <div id="googleMap" ></div>
 
 <script type="text/javascript">
 
+    function astro() {
+        $.getJSON('http://api.open-notify.org/astros.json?callback=?', function (data) {
 
+            var number = data['number'];
+            var message = data['message'];
+            var craft = data['people'][0]['craft'];
+            var name = data['people'].forEach(function (d) {
+                var namess = (' ' + d['name'] + ' ' );
 
-    $.getJSON('http://api.open-notify.org/astros.json?callback=?', function(data) {
+                var names =
+                {
+                    "message": message,
+                    "number": number,
+                    "people": [
+                        {
+                            "craft": craft,
+                            "name": namess
+                        }
+                    ]
+                };
 
-        var number = data['number'];
-        var message = data['message'];
-        var craft = data['people'][0]['craft'];
-        var name = data['people'].forEach(function (d) {
-                  var namess = (' ' + d['name'].append[0] + ' ' );
-
-            var names =
-            {
-                "message": message,
-                "number": number,
-                "people": [
-                    {
-                        "craft": craft,
-                        "name": namess
-                    }
-                ]
-            };
 //            document.write( " Number of People On Board: " +  number + "Astronauts Names: " + name);
-            document.getElementById("googleMap").innerHTML = names.number + " " + names.people[0].craft + " " +
-                    names.people[0].name + " " + names.message;
+                document.getElementById("googleMap").innerHTML = names.number + " " + names.people[0].craft + " " +
+                        names.people[0].name + " " + names.message;
+            });
         });
-    });
-//    document.getElementById("googleMap").innerHTML =
-//            myArray[0].iss_position.longitude + "  " + myArray[0].iss_position.latitude;
+    }
 
 
 </script>
 
-</body>
+</h:body>
 
 </html>

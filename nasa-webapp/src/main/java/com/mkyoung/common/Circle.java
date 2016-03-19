@@ -5,6 +5,7 @@ import sun.util.calendar.BaseCalendar;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by 79Paton on 12/03/2016.
@@ -19,6 +20,7 @@ public class Circle implements Serializable {
     private String backgroundColor;
     private String borderColor;
     private double scaleFactor;
+    private String name;
 
     public String getName() {
         return name;
@@ -27,8 +29,6 @@ public class Circle implements Serializable {
     public void setName(String name) {
         this.name = name;
     }
-
-    private String name;
 
     public Timestamp getTimestamp() {
         return timestamp;

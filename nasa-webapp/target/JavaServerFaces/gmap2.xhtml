@@ -6,17 +6,46 @@
       xmlns:p="http://primefaces.org/ui"
       xmlns:pe="http://primefaces.org/ui/extensions">>
 
-<h:head>
+<head>
     <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js"></script>
     <script type="text/javascript" src="http://code.jquery.com/jquery-1.7.2.min.js"></script>
     <h:outputScript library="primefaces" name="primefaces.js" />
-</h:head>
 
-<h:body onload="datefunction()">
+    <script type="text/javascript">
+
+        var myName1;
+
+        function names() {
+            $.getJSON('resources/json.json', function (data) {
+                var number = data['number'];
+                var message = data['message'];
+                var craft = data['people'][0]['craft'];
+                var name = data['people'].forEach(function (d) {
+                    var namess = $('#circle').append(' ' + d['name'] + ' ' );
+
+                    myName1 =
+                        {
+                            "people" : [
+                                {
+                                    "name": name
+                                }
+                            ]
+                        };
+
+
+                    document.getElementById("demo").innerHTML = myName1.people[0];
+                });
+            });
+        }
+
+    </script>
+</head>
+
+<h:body onload="names()">
 
 <div id="demo" ></div>
 
-<h:form>
+<h:form id="gmap2">
     <p:growl id="growl" showDetail="true" />
 
             <pe:remoteCommand id="applyDataCommand" name="applyData" process="@this" update="subject date circle growl"
@@ -26,33 +55,11 @@
             <pe:assignableParam name="date" assignTo="#{remoteCommandController.date}">
             <f:convertDateTime type="both" dateStyle="short" locale="en"/>
             </pe:assignableParam>
-    <pe:assignableParam name="circle" assignTo="#{remoteCommandController.circle}">
+            <pe:assignableParam name="circle" assignTo="#{remoteCommandController.circle}">
             <pe:convertJson />
-    </pe:assignableParam>
-    </pe:remoteCommand>
+            </pe:assignableParam>
+            </pe:remoteCommand>
 </h:form>
-    <script type="text/javascript">
-
-        $.getJSON('http://api.open-notify.org/astros.json?callback=?', function(data) {
-            var number = data['number'];
-            var message = data['message'];
-            var craft = data['people'][0]['craft'];
-            var name = data['people'][0]['name'];
-
-            var names = ([
-                {
-                    "message": message,
-                    "number": number,
-                    "people": [
-                        {
-                            "craft": craft,
-                            "name": name
-                        }
-                    ]
-                }
-            ]);
-        });
-</script>
 
 <h:outputLabel for="subject" value="Subject: " />
 <h:outputText id="subject" value="#{remoteCommandController.subject}" />
@@ -64,8 +71,10 @@
 <h:outputText id="circle" value="#{remoteCommandController.circle.name}" />
 <br/><br/>
 
+
+
 <p:commandButton value="Apply Data" type="button" onclick="applyData('hello world', '5/14/07 12:55:42 PM', JSON.stringify(circle))" />
-<p:commandButton value="Apply Second Data" type="button" onclick="applyData('hello user', '7/11/01 11:55:42 PM', JSON.stringify(names[0]))" />
+<p:commandButton id="poll1" value="Apply Second Data" type="button" onclick="applyData('hello user', '7/11/01 11:55:42 PM', JSON.stringify(myName1.people[0]))" />
 
 </h:body>
 

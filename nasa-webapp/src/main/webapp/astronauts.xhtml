@@ -11,36 +11,40 @@
 
 </h:head>
 
-<h:body>
+<h:body onload="astro()">
 
 <div id="googleMap" ></div>
 
 <script type="text/javascript">
 
-    $.getJSON('http://api.open-notify.org/astros.json?callback=?', function(data) {
+    function astro() {
+        $.getJSON('http://api.open-notify.org/astros.json?callback=?', function (data) {
 
-        var number = data['number'];
-        var message = data['message'];
-        var craft = data['people'][0]['craft'];
-        var name = data['people'].forEach(function (d) {
-                  var namess = (' ' + d['name'] + ' ' );
+            var number = data['number'];
+            var message = data['message'];
+            var craft = data['people'][0]['craft'];
+            var name = data['people'].forEach(function (d) {
+                var namess = (' ' + d['name'] + ' ' );
 
-            var names =
-            {
-                "message": message,
-                "number": number,
-                "people": [
-                    {
-                        "craft": craft,
-                        "name": namess
-                    }
-                ]
-            };
+                var names =
+                {
+                    "message": message,
+                    "number": number,
+                    "people": [
+                        {
+                            "craft": craft,
+                            "name": namess
+                        }
+                    ]
+                };
+
 //            document.write( " Number of People On Board: " +  number + "Astronauts Names: " + name);
-            document.getElementById("googleMap").innerHTML = names.number + " " + names.people[0].craft + " " +
-                    names.people[0].name + " " + names.message;
+                document.getElementById("googleMap").innerHTML = names.number + " " + names.people[0].craft + " " +
+                        names.people[0].name + " " + names.message;
+            });
         });
-    });
+    }
+
 
 </script>
 
