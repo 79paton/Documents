@@ -39,7 +39,7 @@
 
             function addMarker() {
                 <!-- getJSON JQuery -->
-                $.getJSON('http://api.open-notify.org/iss-now.json?callback=?', function (data) {
+                $.getJSON('resources/json1.json', function (data) {
                     var lat = data['iss_position']['latitude'];
                     var lon = data['iss_position']['longitude'];
                     var date = data['timestamp'];
@@ -79,7 +79,7 @@
     </script>
 </head>
 
-<h:body onload="initialize()">
+<h:body>
 <h:outputScript library="primefaces" name="jquery/jquery.js" />
 
 <h:form id="gmap1">

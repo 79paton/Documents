@@ -3,28 +3,28 @@
     "number": 6,
     "people": [
     {
-        "craft": "ISS",
-        "name": "Yuri Malenchenko"
+        "craft": "ISS1",
+        "name": "Yuri Malenchenkoooo"
     },
     {
-        "craft": "ISS",
+        "craft": "ISS2",
         "name": "Timothy Kopra"
     },
     {
-        "craft": "ISS",
+        "craft": "ISS3",
         "name": "Timothy Peake"
     },
     {
-        "craft": "ISS",
+        "craft": "ISS4",
         "name": "Alexey Ovchinin"
     },
     {
-        "craft": "ISS",
+        "craft": "ISS5",
         "name": "Oleg Skripochka"
     },
     {
-        "craft": "ISS",
-        "name": "Jeff Williams"
+        "craft": "ISS6",
+        "name": "Jeff Williamsssss"
     }
 ]
 }

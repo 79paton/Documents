@@ -22,6 +22,16 @@ public class Circle implements Serializable {
     private double scaleFactor;
     private String name;
 
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    private Date date;
+
     public String getName() {
         return name;
     }
@@ -30,15 +40,6 @@ public class Circle implements Serializable {
         this.name = name;
     }
 
-    public Timestamp getTimestamp() {
-        return timestamp;
-    }
-
-    public void setTimestamp(Timestamp timestamp) {
-        this.timestamp = timestamp;
-    }
-
-    private Timestamp timestamp;
 
 
 //    public Date getDate() {

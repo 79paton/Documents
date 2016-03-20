@@ -39,7 +39,7 @@
 
             function addMarker() {
                 <!-- getJSON JQuery -->
-                $.getJSON('http://api.open-notify.org/iss-now.json?callback=?', function (data) {
+                $.getJSON('resources/json1.json', function (data) {
                     var lat = data['iss_position']['latitude'];
                     var lon = data['iss_position']['longitude'];
                     var date = data['timestamp'];
@@ -47,7 +47,7 @@
                     myArray =
                         {
 //                            "message": "success",
-//                            "timestamp": UNIX_TIME_STAMP,
+                            "timestamp": date,
                             "iss_position": ([
                             {
                                 "latitude": lat,
@@ -79,7 +79,7 @@
     </script>
 </head>
 
-<h:body onload="initialize()">
+<h:body>
 <h:outputScript library="primefaces" name="jquery/jquery.js" />
 
 <h:form id="gmap1">
@@ -110,14 +110,14 @@
     <h:outputText id="date" value="#{remoteCommandController.date}" />
     <br/>
     <h:outputLabel for="circle" value="Date: " />
-    <h:outputText id="circle" value="#{remoteCommandController.circle.backgroundColor}" />
+    <h:outputText id="circle" value="#{remoteCommandController.circle.date}" />
     <br/>
     <h:outputLabel for="coords" value="Circle: " />
     <h:outputText id="coords" value=" Latitude: #{remoteCommandController.coords.latitude} - Longitude: #{remoteCommandController.coords.longitude}" />
     <br/><br/>
 
-    <p:poll id="poll2" interval="10" update="applyDataCommand" oncomplete="applyData('hello world', '5/14/07 12:55:42 PM', JSON.stringify(myArray.iss_position[0]))" />
-    <p:commandButton value="Apply Second Data" type="button" onclick="applyData('hello user', '7/11/01 11:55:42 PM', JSON.stringify(circle2))" />
+    <p:poll id="poll2" interval="10" update="applyDataCommand" oncomplete="applyData('hello world', '5/14/07 12:55:42 PM', JSON.stringify(myArray.iss_postion[0]))" />
+    <p:commandButton value="Apply Second Data" type="button" onclick="applyData('hello user', '7/11/01 11:55:42 PM', JSON.stringify(myArray))" />
 
 
 </h:form>
