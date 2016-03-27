@@ -3,7 +3,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:p="http://primefaces.org/ui">
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pe="http://primefaces.org/ui/extensions">
 
 <h:head>
     <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js"></script>
@@ -13,48 +14,66 @@
 
 <h:body onload="astro()">
 
-<div id="googleMap" ></div>
-
 <script type="text/javascript">
-
-    var names = [];
 
     function astro() {
         $.getJSON('resources/json.json', function (data) {
 
-
             var number = data['number'];
             var message = data['message'];
-            var craft = data['people'].forEach(function (d) {
-            var crafts = (' ' + d['craft'] + ' ');
-            var name = data['people'].push(function (d) {
-            var names = (" " + d['name'] + " ");
-
-                    names =
-                    {
-                        "message": message,
-                        "number": number,
-                        "people": [
-                            {
-                                "craft": crafts,
-                                "name": names
-                            }
-                        ]
-                    };
-
-//            document.write( " Number of People On Board: " +  number + "Astronauts Names: " + name);
-                    document.getElementById("googleMap").innerHTML = names.number + " " + names.people[0].craft + " " +
-                            names.people[0].name + " " + names.message;
-
+                var name = data['people'].forEach(function (d) {
+                    var names = ([' ' + d['name'] + ' ' ]);
+                    names.forEach(function (value) {
+                        document.write(value);
+                    });
                 });
+            names =
+            {
+                "message": message,
+                "number": number,
+                "people": [
+                    {
+                        "name": names
+                    }
+                ]
+            };
             });
-        });
     }
-
-
 
 </script>
 
-</h:body>
+    <h:outputScript library="primefaces" name="jquery/jquery.js" />
 
+    <h:form prependId="false">
+
+        <p:growl id="growl" showDetail="true" />
+
+        <pe:remoteCommand id="applyDataCommand" name="applyData" process="@this" update="subject date names growl"
+                          actionListener="#{remoteCommandController.parametersAssigned}">
+
+            <pe:assignableParam name="subject" assignTo="#{remoteCommandController.subject}"/>
+            <pe:assignableParam name="date" assignTo="#{remoteCommandController.date}">
+                <f:convertDateTime type="both" dateStyle="short" locale="en"/>
+            </pe:assignableParam>
+            <pe:assignableParam name="names" assignTo="#{remoteCommandController.names}">
+                <pe:convertJson />
+            </pe:assignableParam>
+        </pe:remoteCommand>
+
+        <h:outputLabel for="subject" value="Subject: " />
+        <h:outputText id="subject" value="#{remoteCommandController.subject}" />
+        <br/>
+        <h:outputLabel for="date" value="Date: " />
+        <h:outputText id="date" value="#{remoteCommandController.date}" />
+        <br/>
+        <h:outputLabel for="names" value="Date: " />
+        <h:outputText id="names" value="#{remoteCommandController.names.names}" />
+        <br/>
+
+        <!--<p:poll id="poll2" interval="10" update="applyDataCommand" oncomplete="applyData('hello world', '5/14/07 12:55:42 PM', JSON.stringify(myArray))" />-->
+        <p:commandButton value="Apply Second Data" type="button" onclick="applyData('hello user', '7/11/01 11:55:42 PM', JSON.stringify(names))" />
+
+    </h:form>
+
+</h:body>
 </html>

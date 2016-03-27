@@ -5,7 +5,7 @@
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:p="http://primefaces.org/ui"
       xmlns:pe="http://primefaces.org/ui/extensions">
-<head>
+<h:head>
     <title> Test Page 444 </title>
 
     <script src="http://maps.googleapis.com/maps/api/js?sensor=false" type="text/javascript"></script>
@@ -32,39 +32,34 @@
                     zoom: myZoom,
                     mapTypeId: myType
                 };
-                map = new google.maps.Map(document.getElementById("gmap1:googleMap"), mapProp);
+                map = new google.maps.Map(document.getElementById("googleMap"), mapProp);
                 addMarker();
             }
 
-
             function addMarker() {
                 <!-- getJSON JQuery -->
-                $.getJSON('resources/json1.json', function (data) {
+                $.getJSON('http://api.open-notify.org/iss-now.json?callback=?', function (data) {
                     var lat = data['iss_position']['latitude'];
                     var lon = data['iss_position']['longitude'];
                     var date = data['timestamp'];
+                    var d = new Date(0);
+                    d.setUTCSeconds(date);
 
                     myArray =
-                        {
-//                            "message": "success",
-                            "timestamp": date,
-                            "iss_position": ([
-                            {
-                                "latitude": lat,
-                                "longitude": lon
-                            }
-                            ])
-                        };
+                    {
+                        "latitude": lat,
+                        "longitude": lon,
+                        "date": date
+                    };
 
-
-                    marker = new google.maps.Marker({
-                        position: new google.maps.LatLng(myArray.iss_position[0].latitude, myArray.iss_position[0].longitude),
-                        map: map,
-                        icon: 'resources/images/iss3.png'
+                        marker = new google.maps.Marker({
+                            position: new google.maps.LatLng(lat, lon),
+                            map: map,
+                            icon: 'resources/images/iss3.png'
+                        });
+                        $('poll').timeout(initialize);
+                        markersArray.push(marker);
                     });
-                    $('poll').timeout(initialize);
-                    markersArray.push(marker);
-                });
             }
 
             function loadScript() {
@@ -75,14 +70,15 @@
             }
 
             window.onload = loadScript;
+            window.onload = addMarker();
 
     </script>
-</head>
+</h:head>
 
 <h:body>
 <h:outputScript library="primefaces" name="jquery/jquery.js" />
 
-<h:form id="gmap1">
+<h:form prependId="false">
     <p:gmap id="googleMap" center="56.4640, 2.9700" zoom="3" type="TERRAIN" style="width:100%;height:400px" />
     <p:poll id="poll" interval="10" update="googleMap" oncomplete="initialize()"  />
 
@@ -98,7 +94,7 @@
         <pe:assignableParam name="coords" assignTo="#{remoteCommandController.coords}">
             <pe:convertJson />
         </pe:assignableParam>
-        <pe:assignableParam name="circle" assignTo="#{remoteCommandController.circle}">
+        <pe:assignableParam name="circle" assignTo="#{remoteCommandController.coords}">
             <pe:convertJson />
         </pe:assignableParam>
     </pe:remoteCommand>
@@ -110,15 +106,13 @@
     <h:outputText id="date" value="#{remoteCommandController.date}" />
     <br/>
     <h:outputLabel for="circle" value="Date: " />
-    <h:outputText id="circle" value="#{remoteCommandController.circle.date}" />
+    <h:outputText id="circle" value="#{remoteCommandController.coords.date}" />
     <br/>
     <h:outputLabel for="coords" value="Circle: " />
     <h:outputText id="coords" value=" Latitude: #{remoteCommandController.coords.latitude} - Longitude: #{remoteCommandController.coords.longitude}" />
     <br/><br/>
 
-    <p:poll id="poll2" interval="10" update="applyDataCommand" oncomplete="applyData('hello world', '5/14/07 12:55:42 PM', JSON.stringify(myArray.iss_postion[0]))" />
-    <p:commandButton value="Apply Second Data" type="button" onclick="applyData('hello user', '7/11/01 11:55:42 PM', JSON.stringify(myArray))" />
-
+    <p:poll id="poll2" interval="10" update="applyDataCommand" oncomplete="applyData('hello world', '5/14/07 12:55:42 PM', JSON.stringify(myArray))" />
 
 </h:form>
 

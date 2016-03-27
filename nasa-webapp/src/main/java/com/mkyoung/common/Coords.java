@@ -13,8 +13,7 @@ public class Coords implements Serializable {
     private static final long serialVersionUID = 20111020L;
     private double latitude;
     private double longitude;
-
-    private Date date;
+    private Date date = null;
 
     public double getLongitude() {
         return longitude;

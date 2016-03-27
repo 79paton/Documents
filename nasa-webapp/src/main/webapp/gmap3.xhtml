@@ -4,16 +4,77 @@
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:p="http://primefaces.org/ui"
-      xmlns:pe="http://primefaces.org/ui/extensions">>
+      xmlns:pe="http://primefaces.org/ui/extensions">
+<head>
+    <title> Test Page 444 </title>
 
-<h:head>
-    <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js"></script>
+    <script src="http://maps.googleapis.com/maps/api/js?sensor=false" type="text/javascript"></script>
+    <!--<script src="http://api.open-notify.org/iss-now.json" type="text/javascript"></script>-->
     <script type="text/javascript" src="http://code.jquery.com/jquery-1.7.2.min.js"></script>
+
     <h:outputScript library="primefaces" name="primefaces.js" />
-</h:head>
+
+    <link rel="stylesheet" href="resources/css/stylesheet.css" type="text/css" />
+
+    <script type="text/javascript">
+
+        var markersArray = [];
+        var map;
+
+        function initialize() {
+
+            var myCenter = new google.maps.LatLng(56.4640, 2.9700);
+            var myType = google.maps.MapTypeId.TERRAIN;
+            var myZoom = 3;
+
+            var mapProp = {
+                center: myCenter,
+                zoom: myZoom,
+                mapTypeId: myType
+            };
+            map = new google.maps.Map(document.getElementById("gmap1:googleMap"), mapProp);
+            addMarker();
+        }
+
+
+        function addMarker() {
+
+            var lat = '#{remoteCommandController.coords.latitude}';
+            var lon = '#{remoteCommandController.coords.longitude}';
+
+                marker = new google.maps.Marker({
+                    position: new google.maps.LatLng(lat, lon),
+                    map: map,
+                    icon: 'resources/images/iss3.png'
+                });
+                $('poll').timeout(initialize);
+                markersArray.push(marker);
+        }
+
+        function loadScript() {
+            var script = document.createElement("script");
+            script.type = "text/javascript";
+            script.src = "http://maps.googleapis.com/maps/api/js?sensor=false&amp;callback=initialize";
+            document.body.appendChild(script);
+        }
+
+        window.onload = loadScript;
+
+    </script>
+</head>
 
 <h:body>
+    <h:outputScript library="primefaces" name="jquery/jquery.js" />
+
+    <h:form id="gmap1">
+        <p:gmap id="googleMap" center="56.4640, 2.9700" zoom="3" type="TERRAIN" style="width:100%;height:400px" />
+
+        <h:outputLabel for="coords" value="Circle: " />
+        <h:outputText id="coords" value=" Latitude: #{remoteCommandController.coords.latitude} - Longitude: #{remoteCommandController.coords.longitude}" />
+        <br/><br/>
+
+
+    </h:form>
 
 </h:body>
-
 </html>

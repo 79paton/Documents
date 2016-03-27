@@ -1,5 +1,6 @@
 package com.mkyoung.common;
 
+import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
@@ -8,15 +9,16 @@ import java.util.Date;
 
 /**
  * Created by 79Paton on 12/03/2016.
+ *
  */
-@RequestScoped
+@ApplicationScoped
 @Named
 public class RemoteCommandController {
 
     private String subject;
     private Date date;
-    private Circle circle;
     private Coords coords;
+    private Names names;
 
     public void parametersAssigned() {
         final FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "ActionListener called",
@@ -49,12 +51,11 @@ public class RemoteCommandController {
         this.coords = coords;
     }
 
-    public Circle getCircle() {
-        return circle;
+    public Names getNames() {
+        return names;
     }
 
-    public void setCircle(Circle circle) {
-        this.circle = circle;
+    public void setNames(Names names) {
+        this.names = names;
     }
-
 }
